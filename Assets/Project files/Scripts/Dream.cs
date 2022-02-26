@@ -15,6 +15,8 @@ public class Dream : MonoBehaviour
     Player player;
     public Sprite goodDream;
     public Sprite badDream;
+    [SerializeField] private SpriteRenderer m_realDreamSpriteRenderer;
+    [SerializeField] private GameObject dreamPoofParticle;
     
     // Update is called once per frame
     void Update()
@@ -37,6 +39,7 @@ public class Dream : MonoBehaviour
         }
         Destroy(gameObject);
         player.UpdateScoreText(player.points);
+        SpawnPoofParticles();
     }
 
     public DreamType GetDreamType()
@@ -51,11 +54,16 @@ public class Dream : MonoBehaviour
         player = _player;
         if (dreamType == DreamType.BAD)
         {
-            GetComponent<SpriteRenderer>().sprite = badDream;
+            m_realDreamSpriteRenderer.sprite = badDream;
         }
         else
         {
-            GetComponent<SpriteRenderer>().sprite = goodDream;
+            m_realDreamSpriteRenderer.sprite = goodDream;
         }
+    }
+
+    public void SpawnPoofParticles()
+    {
+        Instantiate(dreamPoofParticle, transform.position, dreamPoofParticle.transform.rotation);
     }
 }

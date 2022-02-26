@@ -101,6 +101,7 @@ public class Player : MonoBehaviour
         }
         Destroy(dream.gameObject);
         UpdateScoreText(points);
+        dream.SpawnPoofParticles();
     }
 
     public void UpdateScoreText(int value)
