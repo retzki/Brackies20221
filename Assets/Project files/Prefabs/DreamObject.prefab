@@ -98,8 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88acfff927259594090157a208c2b21c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goodDream: {fileID: 21300000, guid: 6a3db270d2444e14bbbe1192525c04a0, type: 3}
-  badDream: {fileID: 21300000, guid: 9cb5afd6dab7ecb4394ab88c4fadfb6a, type: 3}
+  goodDream: {fileID: 21300000, guid: 6742cdf529cd5d149839142784f606e1, type: 3}
+  badDream: {fileID: 21300000, guid: 4ab6acc5d4576ad469329c7bf36f7f39, type: 3}
 --- !u!58 &7043876095621540230
 CircleCollider2D:
   m_ObjectHideFlags: 0
