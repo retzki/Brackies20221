@@ -12,12 +12,12 @@ public class Dream : MonoBehaviour
 {
     DreamType dreamType;
     Transform dreamTarget;
-    Player player;
     public Sprite goodDream;
     public Sprite badDream;
     [SerializeField] private SpriteRenderer m_realDreamSpriteRenderer;
     [SerializeField] private GameObject dreamPoofParticle;
     float speed;
+    public bool isDreamScanned = false;
     
     // Update is called once per frame
     void Update()
@@ -32,16 +32,23 @@ public class Dream : MonoBehaviour
         {
             return;
         }
-        switch (dreamType)
+        if(isDreamScanned)
         {
-            case DreamType.GOOD:
-                GameManager.instance.UpdateCurrentDreamValue(GameManager.instance.dreamGain);
-                break;
-            case DreamType.BAD:
-                GameManager.instance.UpdateCurrentDreamValue(-GameManager.instance.dreamGain);
-                break;
-            default:
-                break;
+            switch (dreamType)
+            {
+                case DreamType.GOOD:
+                    GameManager.instance.UpdateCurrentDreamValue(GameManager.instance.dreamGain);
+                    break;
+                case DreamType.BAD:
+                    GameManager.instance.UpdateCurrentDreamValue(-GameManager.instance.dreamGain);
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+		{
+            GameManager.instance.UpdateCurrentDreamValue(-GameManager.instance.dreamGain / 2);
         }
         GameManager.instance.spawnedDreams.Remove(gameObject);
         Destroy(gameObject);
@@ -59,7 +66,6 @@ public class Dream : MonoBehaviour
         this.speed = speed;
         dreamTarget = trans;
         dreamType = (DreamType)Random.Range(0, System.Enum.GetValues(typeof(DreamType)).Length);
-        player = _player;
         if (dreamType == DreamType.BAD)
         {
             m_realDreamSpriteRenderer.sprite = badDream;
@@ -74,4 +80,16 @@ public class Dream : MonoBehaviour
     {
         Instantiate(dreamPoofParticle, transform.position, dreamPoofParticle.transform.rotation);
     }
+
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+		if (isDreamScanned)
+		{
+            return;
+		}
+		if(other.gameObject.CompareTag("Player"))
+		{
+            isDreamScanned = true;
+		}
+	}
 }

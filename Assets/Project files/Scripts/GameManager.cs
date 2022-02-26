@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public float startDreamSpeed = 2f;
     int nightsSurvived = 0;
     public List<GameObject> spawnedDreams = new List<GameObject>();
+    public float dreamAutoDecreaseAmount = .1f;
 
     private void Awake()
     {
@@ -68,6 +69,11 @@ public class GameManager : MonoBehaviour
             HandleClockChange();
             canClockChange = clockChangeInterval;
             CheckIfNightOver();
+        }
+
+        if(currentDreamValue - Time.deltaTime * dreamAutoDecreaseAmount > 0.02f)
+        {
+            UpdateCurrentDreamValue(-dreamAutoDecreaseAmount * Time.deltaTime);
         }
     }
 

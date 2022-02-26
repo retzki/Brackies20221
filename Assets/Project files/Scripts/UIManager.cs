@@ -40,6 +40,14 @@ public class UIManager : MonoBehaviour
     public void UpdateDreamStateImage(float value)
     {
         dreamStateImage.transform.localScale = new Vector2(value, dreamStateImage.transform.localScale.y);
+        if (value > .5f)
+        {
+            dreamStateImage.color = new Color(2 - 2 * value, 1, 0);
+        }
+        else if (value <= .5f)
+        {
+            dreamStateImage.color = new Color(1, 2 * value, 0);
+        }
     }
 
     public void UpdateClockText(int hours, int minutes)
