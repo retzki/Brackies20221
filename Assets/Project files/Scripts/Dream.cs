@@ -17,11 +17,17 @@ public class Dream : MonoBehaviour
     public Sprite badDream;
     [SerializeField] private SpriteRenderer m_realDreamSpriteRenderer;
     [SerializeField] private GameObject dreamPoofParticle;
+    float speed;
     
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, dreamTarget.position, Time.deltaTime * 2);
+        if (GameManager.instance.isPlaying == false)
+        {
+            return;
+        }
+
+        transform.position = Vector2.MoveTowards(transform.position, dreamTarget.position, Time.deltaTime * speed);
         if (Vector2.Distance(transform.position, dreamTarget.position) > 0.1f)
         {
             return;
@@ -29,16 +35,17 @@ public class Dream : MonoBehaviour
         switch (dreamType)
         {
             case DreamType.GOOD:
-                player.points++;
+                GameManager.instance.UpdateCurrentDreamValue(GameManager.instance.dreamGain);
                 break;
             case DreamType.BAD:
-                player.points--;
+                GameManager.instance.UpdateCurrentDreamValue(-GameManager.instance.dreamGain);
                 break;
             default:
                 break;
         }
+        GameManager.instance.spawnedDreams.Remove(gameObject);
         Destroy(gameObject);
-        player.UpdateScoreText(player.points);
+
         SpawnPoofParticles();
     }
 
@@ -47,8 +54,9 @@ public class Dream : MonoBehaviour
         return dreamType;
     }
 
-    public void Init(Transform trans, Player _player)
+    public void Init(Transform trans, Player _player, float speed)
     {
+        this.speed = speed;
         dreamTarget = trans;
         dreamType = (DreamType)Random.Range(0, System.Enum.GetValues(typeof(DreamType)).Length);
         player = _player;

@@ -8,25 +8,13 @@ using TMPro;
 public class Player : MonoBehaviour
 {
     PlayerInput playerInput;
-    InputAction painaAction;
     public GameObject circle;
     Vector2 mousePosition;
-    bool onkoPainettu;
-    bool isActive;
     public Camera cam;
-    public int points = 0;
-    public GameObject dreamObject;
-    float timer = 2;
-    public float dreamPosXmax = 2.7f;
-    public float dreamPosYmax = 6f;
-    public Transform dreamTarget;
-    public TMP_Text scoreText;
-
+   
     void Awake()
     {
         playerInput = new PlayerInput();
-        playerInput.Player.Paina.performed += HandlePaina;
-        playerInput.Player.Paina.Enable();
         playerInput.Player.HiirenLiike.performed += HandleHiirenLiike;
         playerInput.Player.HiirenLiike.Enable();
         playerInput.Player.PickDream.performed += HandlePickDream;
@@ -37,37 +25,18 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UpdateScoreText(points);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(onkoPainettu == false)
+        if (GameManager.instance.isPlaying == false)
         {
-            HandleSquareMovement();
-            
+            return;
         }
-
-        timer -= Time.deltaTime;
-
-        if (timer <= 0)
-        {
-            float dreamPosX = Random.Range(-dreamPosXmax, dreamPosXmax);
-            Vector2 dreamPos = new Vector2(dreamPosX, dreamPosYmax);
-            GameObject dreamObj = Instantiate(dreamObject, dreamPos, Quaternion.identity);
-            dreamObj.GetComponent<Dream>().Init(dreamTarget, this);
-            timer = 2;
-        }     
-
-
+        HandleSquareMovement();
     }
-
-    void HandlePaina(InputAction.CallbackContext context)
-    {
-        
-    }
-
+    
     void HandleHiirenLiike(InputAction.CallbackContext context)
     {
         Vector2 mPos = context.ReadValue<Vector2>();
@@ -96,49 +65,12 @@ public class Player : MonoBehaviour
             case DreamType.BAD:
                 break;
             case DreamType.GOOD:
-                points--;
+                GameManager.instance.UpdateCurrentDreamValue(-GameManager.instance.dreamGain);
                 break;
         }
+        GameManager.instance.spawnedDreams.Remove(dream.gameObject);
         Destroy(dream.gameObject);
-        UpdateScoreText(points);
         dream.SpawnPoofParticles();
     }
-
-    public void UpdateScoreText(int value)
-    {
-        scoreText.text = "Good dreams" + "\n" + value.ToString();
-    }
-      
-    /* void HandleVasenKlikkausStop(InputAction.CallbackContext context)
-    {
-        print("Reetta");
-        onkoPainettu = !onkoPainettu;
-        // playerInput.Player.HiirenLiike.Disable();
-        if (isActive == false)
-        {
-            ChangeColor(Color.white);
-            isActive = true;
-        }
-    }void HandleOikeaKlik(InputAction.CallbackContext context)
-    {  
-
-        if (onkoPainettu == false && isActive == true)
-        {
-            print("jes");
-            ChangeColor(hoverColor);
-            isActive = false;
-        } 
-        else if(onkoPainettu ==false && isActive == false)
-            {
-            ChangeColor(Color.white);
-            isActive = true; 
-        }
-    }
-
-    void ChangeColor(Color color)
-    {
-        SpriteRenderer spriteRenderer = square.GetComponent<SpriteRenderer>();
-        spriteRenderer.color = color;
-        
-    } */
+    
 }
