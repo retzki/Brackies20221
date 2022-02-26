@@ -105,7 +105,7 @@ public class Player : MonoBehaviour
 
     public void UpdateScoreText(int value)
     {
-        scoreText.text = "Score" + "\n" + value.ToString();
+        scoreText.text = "Good dreams" + "\n" + value.ToString();
     }
       
     /* void HandleVasenKlikkausStop(InputAction.CallbackContext context)
